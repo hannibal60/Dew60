@@ -1,0 +1,66 @@
+void BuscarRutaOptima(Datos *datos, int r[20][2])
+{
+	int i, inicio, indice_del_menor;
+ 
+	do
+	{
+		LIMPIAR_PANTALLA
+		printf("\n\n\n\t\tDame la ciudad de inicio: ");
+		scanf("%d", &inicio);
+		Flush_in();
+ 
+		if (inicio < 1 || inicio > (datos -> num_ciudades))
+		{
+			printf("\n\t\t** La ciudad debe estar entre 1 y %d **", datos -> num_ciudades);
+			getchar();
+		}
+	}while(inicio < 1 || inicio > (datos -> num_ciudades));
+ 
+	r[0][0] = inicio;
+ 
+	inicio--;	
+ 
+	for (i = 0; i < (datos -> num_ciudades); i++)
+	{			
+		if(i == 0)
+		{
+			indice_del_menor = BuscarEnFila(datos, inicio, r);
+			QuitarCiudadesVisitadas(datos, r, indice_del_menor, false);
+		}
+		else
+			{
+				if (i == (datos -> num_ciudades) - 2)
+				{
+					indice_del_menor = BuscarEnFila(datos, indice_del_menor, r);
+					QuitarCiudadesVisitadas(datos, r, indice_del_menor, true);
+				}
+				else
+				{
+					indice_del_menor = BuscarEnFila(datos, indice_del_menor, r);
+					QuitarCiudadesVisitadas(datos, r, indice_del_menor, false);
+				}
+			}		
+	}
+}
+ 
+int BuscarEnFila(Datos *datos, int inicio, int r[20][2])
+{
+	int j, menor = 999999, indice_del_menor;
+ 
+	for (j = 0; j < (datos -> num_ciudades); j++)
+	{
+		if ( (datos -> G[inicio][j]) != 0 )
+		{
+			if ( (datos -> G[inicio][j]) < menor )
+			{
+				menor =	 datos -> G[inicio][j];
+				indice_del_menor = j;
+			}
+		}
+	}	
+ 
+	GuardarCiudad(r ,indice_del_menor);
+	GuardarValor(r, menor);
+ 
+	return indice_del_menor;
+}
